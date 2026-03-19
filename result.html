@@ -1,7 +1,9 @@
-<!DOCTYPE html>
+
+  <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Disease Prediction</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -17,14 +19,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 .card {
     background: white;
-    padding: 40px;
+    padding: 30px;
     border-radius: 20px;
-    width: 90%;
+    width: 100%;
     max-width: 700px;
     text-align: center;
     box-shadow: 0 20px 50px rgba(0,0,0,0.2);
@@ -43,7 +46,6 @@ body {
     background: linear-gradient(135deg, #667eea, #00f2fe);
     color: white;
     text-decoration: none;
-    display: inline-block;
 }
 </style>
 </head>
@@ -61,9 +63,7 @@ body {
 <p><strong>Advice:</strong> <span id="advice"></span></p>
 </div>
 
-<a id="hospitalBtn" class="btn">
-Find Nearby Hospital & Doctors
-</a>
+<a id="hospitalBtn" class="btn">Find Nearby Hospital & Doctors</a>
 
 </div>
 </div>
@@ -78,78 +78,73 @@ let others = (params.get("others") || "").toLowerCase();
 let address = params.get("address") || "India";
 
 /* USER SYMPTOMS */
-let userSymptoms = [primary, ...others.split(",")].map(s => s.trim()).filter(Boolean);
+let userSymptoms = [primary, ...others.split(",")]
+    .map(s => s.trim())
+    .filter(Boolean);
 
-/* DISEASE DATABASE */
+/* 🔥 EXTENSIVE DISEASE DATABASE */
 const diseases = [
-    {
-        name: "Dengue",
-        symptoms: ["fever","body pain","fatigue","weakness","headache"],
-        advice: "Drink fluids and consult doctor immediately."
-    },
-    {
-        name: "COVID-19",
-        symptoms: ["fever","cough","breathing issue","fatigue"],
-        advice: "Isolate and monitor oxygen level."
-    },
-    {
-        name: "Typhoid",
-        symptoms: ["fever","weakness","headache","stomach pain"],
-        advice: "Avoid outside food and consult doctor."
-    },
-    {
-        name: "Migraine",
-        symptoms: ["headache","dizziness","nausea"],
-        advice: "Rest in dark environment."
-    },
-    {
-        name: "Food Poisoning",
-        symptoms: ["vomiting","diarrhea","stomach pain"],
-        advice: "Stay hydrated and take ORS."
-    },
-    {
-        name: "Common Cold",
-        symptoms: ["cold","cough","sore throat"],
-        advice: "Take rest and warm fluids."
-    },
-    {
-        name: "Heart Issue",
-        symptoms: ["chest pain","breathing issue","fatigue"],
-        advice: "Seek immediate medical help."
-    },
-    {
-        name: "Skin Allergy",
-        symptoms: ["skin rash","itching"],
-        advice: "Avoid allergens and consult dermatologist."
-    }
+
+{ name:"Dengue", symptoms:["fever","body pain","joint pain","fatigue","headache"], advice:"Consult doctor immediately." },
+{ name:"COVID-19", symptoms:["fever","cough","breathing issue","fatigue"], advice:"Monitor oxygen and isolate." },
+{ name:"Typhoid", symptoms:["fever","weakness","stomach pain","headache"], advice:"Avoid outside food." },
+{ name:"Malaria", symptoms:["fever","chills","sweating","headache"], advice:"Blood test required." },
+{ name:"Flu", symptoms:["fever","cough","body pain","fatigue"], advice:"Rest and hydration." },
+
+{ name:"Migraine", symptoms:["headache","dizziness","nausea"], advice:"Rest in dark room." },
+{ name:"Tension Headache", symptoms:["headache","stress"], advice:"Relaxation needed." },
+
+{ name:"Food Poisoning", symptoms:["vomiting","diarrhea","stomach pain"], advice:"Drink ORS." },
+{ name:"Gastritis", symptoms:["stomach pain","nausea","bloating"], advice:"Avoid spicy food." },
+
+{ name:"Muscle Strain", symptoms:["body pain","fatigue"], advice:"Rest muscles." },
+{ name:"Arthritis", symptoms:["joint pain","stiffness"], advice:"Consult orthopedic." },
+
+{ name:"Common Cold", symptoms:["cold","cough","sore throat"], advice:"Warm fluids." },
+{ name:"Allergy", symptoms:["skin rash","itching"], advice:"Avoid allergens." },
+
+{ name:"Heart Issue", symptoms:["chest pain","breathing issue","fatigue"], advice:"Emergency care needed." },
+{ name:"Asthma", symptoms:["breathing issue","cough"], advice:"Use inhaler." }
+
 ];
 
-/* MATCHING LOGIC */
+/* 🔥 ADVANCED SCORING SYSTEM */
 let bestMatch = null;
-let maxScore = 0;
+let bestScore = 0;
 
-diseases.forEach(disease => {
+diseases.forEach(d => {
 
-    let matchCount = disease.symptoms.filter(sym =>
-        userSymptoms.some(user => user.includes(sym))
+    let matchCount = 0;
+
+    d.symptoms.forEach(sym => {
+        if (userSymptoms.some(u => u.includes(sym))) {
+            matchCount++;
+        }
+    });
+
+    let coverage = matchCount / d.symptoms.length;
+
+    // Penalize if user has unrelated symptoms
+    let mismatch = userSymptoms.filter(u =>
+        !d.symptoms.some(sym => u.includes(sym))
     ).length;
 
-    let score = matchCount / disease.symptoms.length;
+    let score = coverage - (mismatch * 0.05);
 
-    if (score > maxScore) {
-        maxScore = score;
-        bestMatch = disease;
+    if (score > bestScore) {
+        bestScore = score;
+        bestMatch = d;
     }
 });
 
 /* RESULT */
-let diseaseName = "General Viral Infection";
-let confidence = "60%";
-let advice = "Monitor symptoms and consult doctor.";
+let diseaseName = "No strong match";
+let confidence = "Low";
+let advice = "Consult doctor for accurate diagnosis.";
 
-if (bestMatch && maxScore > 0) {
+if (bestMatch && bestScore > 0.2) {
     diseaseName = bestMatch.name;
-    confidence = Math.round(maxScore * 100) + "%";
+    confidence = Math.round(bestScore * 100) + "%";
     advice = bestMatch.advice;
 }
 
@@ -158,7 +153,7 @@ document.getElementById("disease").innerText = diseaseName;
 document.getElementById("confidence").innerText = confidence;
 document.getElementById("advice").innerText = advice;
 
-/* 🔥 CONNECT TO HOSPITAL PAGE (IMPORTANT) */
+/* BUTTON */
 document.getElementById("hospitalBtn").href =
     "nearbyhospital.html?address=" 
     + encodeURIComponent(address) 
