@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Symptom Checker</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #00f2fe);
+    min-height: 100vh;
+}
+
+header {
+    padding: 20px 50px;
+    color: white;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.card {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #777;
+    margin-bottom: 25px;
+}
+
+.dropdown {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.dropdown-input {
+    background: #f4f6fb;
+    padding: 15px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #ddd;
+}
+
+.dropdown-menu {
+    position: absolute;
+    width: 100%;
+    background: white;
+    border-radius: 15px;
+    margin-top: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    display: none;
+    z-index: 10;
+}
+
+.dropdown-menu input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-bottom: 1px solid #eee;
+}
+
+.options {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.options div {
+    padding: 12px;
+    cursor: pointer;
+}
+
+.options div:hover {
+    background: #eef2ff;
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.checkbox-group label {
+    background: #f4f6fb;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+textarea {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    margin-top: 25px;
+    border-radius: 50px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #667eea, #00f2fe);
+    cursor: pointer;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+</style>
+</head>
+
+<body>
+
+<header>Health Tracker – Symptom Checker</header>
+
+<div class="wrapper">
+
+<div class="card">
+
+<h2>🩺 Enter Your Symptoms</h2>
+<p class="subtitle">Select symptoms carefully for accurate prediction</p>
+
+<div class="dropdown">
+    <div class="dropdown-input" onclick="toggleDropdown()">
+        <span id="selectedText">Select primary symptom</span>
+        <span>⌄</span>
+    </div>
+
+    <div class="dropdown-menu" id="dropdownMenu">
+        <input type="text" placeholder="Search symptoms..." onkeyup="filterSymptoms()" id="searchBox">
+
+        <div class="options" id="symptomList">
+            <div onclick="selectSymptom(this)">Fever</div>
+            <div onclick="selectSymptom(this)">Cough</div>
+            <div onclick="selectSymptom(this)">Headache</div>
+            <div onclick="selectSymptom(this)">Chest Pain</div>
+            <div onclick="selectSymptom(this)">Stomach Pain</div>
+            <div onclick="selectSymptom(this)">Fatigue</div>
+            <div onclick="selectSymptom(this)">Dizziness</div>
+            <div onclick="selectSymptom(this)">Skin Rash</div>
+            <div onclick="selectSymptom(this)">Vomiting</div>
+            <div onclick="selectSymptom(this)">Diarrhea</div>
+            <div onclick="selectSymptom(this)">Back Pain</div>
+            <div onclick="selectSymptom(this)">Joint Pain</div>
+            <div onclick="selectSymptom(this)">Anxiety</div>
+            <div onclick="selectSymptom(this)">Shortness of Breath</div>
+        </div>
+    </div>
+</div>
+
+<div class="checkbox-group">
+<label><input type="checkbox"> Cold</label>
+<label><input type="checkbox"> Body Pain</label>
+<label><input type="checkbox"> Nausea</label>
+<label><input type="checkbox"> Weakness</label>
+<label><input type="checkbox"> Sweating</label>
+<label><input type="checkbox"> Breathing Issue</label>
+</div>
+
+<textarea rows="4" placeholder="Describe your condition..."></textarea>
+
+<button onclick="goToResult()">Analyze & Predict Disease</button>
+
+</div>
+
+</div>
+
+<script>
+
+let selectedSymptom = "";
+
+function toggleDropdown() {
+    let menu = document.getElementById("dropdownMenu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function selectSymptom(el) {
+    selectedSymptom = el.innerText;
+    document.getElementById("selectedText").innerText = selectedSymptom;
+    document.getElementById("dropdownMenu").style.display = "none";
+}
+
+function filterSymptoms() {
+    let input = document.getElementById("searchBox").value.toLowerCase();
+    let items = document.querySelectorAll("#symptomList div");
+
+    items.forEach(item => {
+        item.style.display = item.innerText.toLowerCase().includes(input) ? "" : "none";
+    });
+}
+
+/* ✅ UPDATED FUNCTION WITH ADDRESS */
+function goToResult() {
+
+    if (!selectedSymptom) {
+        alert("Please select a symptom");
+        return;
+    }
+
+    let params = new URLSearchParams(window.location.search);
+    let address = params.get("address") || "";
+
+    let checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+    let otherSymptoms = [];
+
+    checkboxes.forEach(cb => {
+        otherSymptoms.push(cb.parentElement.innerText.trim());
+    });
+
+    let url = "result.html?symptom=" 
+        + encodeURIComponent(selectedSymptom) 
+        + "&others=" 
+        + encodeURIComponent(otherSymptoms.join(",")) 
+        + "&address=" 
+        + encodeURIComponent(address);
+
+    window.location.href = url;
+}
+
+document.addEventListener("click", function(e) {
+    if (!e.target.closest(".dropdown")) {
+        document.getElementById("dropdownMenu").style.display = "none";
+    }
+});
+
+</script>
+
+</body>
+</html>

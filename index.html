@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Health Track</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #f8fafc;
+    color: #333;
+}
+
+/* NAVBAR */
+nav {
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    position: relative;
+}
+
+/* Hover underline animation */
+nav ul li a::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    left: 0;
+    bottom: -5px;
+    background: white;
+    transition: 0.3s;
+}
+
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* HERO */
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px 10%;
+    flex-wrap: wrap;
+}
+
+.hero-text {
+    max-width: 500px;
+}
+
+.hero-text h1 {
+    font-size: 42px;
+    color: #222;
+    margin-bottom: 20px;
+}
+
+.hero-text span {
+    color: #4facfe;
+}
+
+.hero-text p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+/* BUTTON */
+.btn {
+    background: linear-gradient(90deg, #ff7eb3, #ff758c);
+    padding: 14px 30px;
+    border-radius: 30px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* IMAGE */
+.hero img {
+    width: 350px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {transform: translateY(0);}
+    50% {transform: translateY(-15px);}
+    100% {transform: translateY(0);}
+}
+
+/* INFO SECTION */
+.info {
+    text-align: center;
+    padding: 70px 10%;
+}
+
+.info h2 {
+    font-size: 32px;
+    margin-bottom: 40px;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    width: 280px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.card h3 {
+    margin-bottom: 10px;
+    color: #4facfe;
+}
+
+/* FOOTER */
+footer {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="logo">Health Track</div>
+    <ul>
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="patient.html">Patient Form</a></li>
+        <li><a href="prediction.html">Prediction</a></li>
+        <li><a href="doctors.html">Doctors</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-text">
+        <h1>Predict Your <span>Disease</span> & Connect With Doctors</h1>
+        <p>
+            Smart healthcare platform to analyze symptoms, predict diseases,
+            and connect with nearby doctors instantly.
+        </p>
+        <a href="patientfrom.html" class="btn">Start Prediction</a>
+    </div>
+
+    <img src="medical.png" alt="health">
+</section>
+
+<!-- INFO -->
+<section class="info">
+    <h2>How Our System Helps You</h2>
+
+    <div class="cards">
+        <div class="card">
+            <h3>🧠 Disease Prediction</h3>
+            <p>Enter symptoms and get instant AI-based prediction.</p>
+        </div>
+
+        <div class="card">
+            <h3>🏥 Doctor Connectivity</h3>
+            <p>Find nearby doctors and hospitals easily.</p>
+        </div>
+
+        <div class="card">
+            <h3>⚡ Fast Treatment</h3>
+            <p>Early detection helps in quick recovery.</p>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    © 2026 Health Track | Smart Healthcare System
+</footer>
+
+</body>
+</html>

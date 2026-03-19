@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nearby Hospitals & Doctors</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,#667eea,#00f2fe);
+    margin: 0;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.card {
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.info {
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.btn {
+    display: block;
+    margin: 15px 0;
+    padding: 14px;
+    border-radius: 30px;
+    background: linear-gradient(135deg,#667eea,#00f2fe);
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* EXTRA FEATURE BUTTON */
+.loc-btn {
+    margin-top: 20px;
+    background: #ff7eb3;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+<div class="card">
+
+<h2>🏥 Nearby Hospitals & Doctors</h2>
+
+<p class="info" id="locationText"></p>
+<p class="info" id="diseaseText"></p>
+
+<a id="hospitalLink" class="btn">🔎 Find Hospitals Near You</a>
+<a id="doctorLink" class="btn">👨‍⚕️ Find Doctors Near You</a>
+
+<button onclick="useLiveLocation()" class="btn loc-btn">
+📍 Use My Live Location
+</button>
+
+</div>
+</div>
+
+<script>
+
+/* GET DATA FROM RESULT PAGE */
+const params = new URLSearchParams(window.location.search);
+
+let address = params.get("address") || "India";
+let disease = params.get("disease") || "";
+
+/* DISPLAY INFO */
+document.getElementById("locationText").innerText =
+    "📍 Location: " + address;
+
+document.getElementById("diseaseText").innerText =
+    "🩺 Condition: " + disease;
+
+/* CREATE GOOGLE MAP LINKS */
+function updateLinks(location){
+
+    let hospitalURL =
+        "https://www.google.com/maps/search/" +
+        encodeURIComponent(disease + " hospital near " + location);
+
+    let doctorURL =
+        "https://www.google.com/maps/search/" +
+        encodeURIComponent(disease + " doctor near " + location);
+
+    document.getElementById("hospitalLink").href = hospitalURL;
+    document.getElementById("doctorLink").href = doctorURL;
+}
+
+/* INITIAL LOAD */
+updateLinks(address);
+
+/* 🔥 LIVE LOCATION OPTION (ANYWHERE IN INDIA) */
+function useLiveLocation() {
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+
+            let lat = pos.coords.latitude;
+            let lon = pos.coords.longitude;
+
+            let location = lat + "," + lon;
+
+            document.getElementById("locationText").innerText =
+                "📍 Using Live Location";
+
+            let hospitalURL =
+                "https://www.google.com/maps/search/" +
+                encodeURIComponent(disease + " hospital near me");
+
+            let doctorURL =
+                "https://www.google.com/maps/search/" +
+                encodeURIComponent(disease + " doctor near me");
+
+            document.getElementById("hospitalLink").href = hospitalURL;
+            document.getElementById("doctorLink").href = doctorURL;
+
+        });
+    } else {
+        alert("Geolocation not supported");
+    }
+}
+
+</script>
+
+</body>
+</html>

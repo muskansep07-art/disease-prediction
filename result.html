@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Disease Prediction</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #00f2fe);
+    margin: 0;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 700px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+.result-box {
+    background: #f4f6fb;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px 0;
+}
+
+.btn {
+    padding: 14px 25px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #667eea, #00f2fe);
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+<div class="card">
+
+<h2>🧠 Smart Disease Prediction</h2>
+
+<div class="result-box">
+<p><strong>Disease:</strong> <span id="disease"></span></p>
+<p><strong>Confidence:</strong> <span id="confidence"></span></p>
+<p><strong>Advice:</strong> <span id="advice"></span></p>
+</div>
+
+<a id="hospitalBtn" class="btn">
+Find Nearby Hospital & Doctors
+</a>
+
+</div>
+</div>
+
+<script>
+
+/* GET DATA */
+const params = new URLSearchParams(window.location.search);
+
+let primary = (params.get("symptom") || "").toLowerCase();
+let others = (params.get("others") || "").toLowerCase();
+let address = params.get("address") || "India";
+
+/* USER SYMPTOMS */
+let userSymptoms = [primary, ...others.split(",")].map(s => s.trim()).filter(Boolean);
+
+/* DISEASE DATABASE */
+const diseases = [
+    {
+        name: "Dengue",
+        symptoms: ["fever","body pain","fatigue","weakness","headache"],
+        advice: "Drink fluids and consult doctor immediately."
+    },
+    {
+        name: "COVID-19",
+        symptoms: ["fever","cough","breathing issue","fatigue"],
+        advice: "Isolate and monitor oxygen level."
+    },
+    {
+        name: "Typhoid",
+        symptoms: ["fever","weakness","headache","stomach pain"],
+        advice: "Avoid outside food and consult doctor."
+    },
+    {
+        name: "Migraine",
+        symptoms: ["headache","dizziness","nausea"],
+        advice: "Rest in dark environment."
+    },
+    {
+        name: "Food Poisoning",
+        symptoms: ["vomiting","diarrhea","stomach pain"],
+        advice: "Stay hydrated and take ORS."
+    },
+    {
+        name: "Common Cold",
+        symptoms: ["cold","cough","sore throat"],
+        advice: "Take rest and warm fluids."
+    },
+    {
+        name: "Heart Issue",
+        symptoms: ["chest pain","breathing issue","fatigue"],
+        advice: "Seek immediate medical help."
+    },
+    {
+        name: "Skin Allergy",
+        symptoms: ["skin rash","itching"],
+        advice: "Avoid allergens and consult dermatologist."
+    }
+];
+
+/* MATCHING LOGIC */
+let bestMatch = null;
+let maxScore = 0;
+
+diseases.forEach(disease => {
+
+    let matchCount = disease.symptoms.filter(sym =>
+        userSymptoms.some(user => user.includes(sym))
+    ).length;
+
+    let score = matchCount / disease.symptoms.length;
+
+    if (score > maxScore) {
+        maxScore = score;
+        bestMatch = disease;
+    }
+});
+
+/* RESULT */
+let diseaseName = "General Viral Infection";
+let confidence = "60%";
+let advice = "Monitor symptoms and consult doctor.";
+
+if (bestMatch && maxScore > 0) {
+    diseaseName = bestMatch.name;
+    confidence = Math.round(maxScore * 100) + "%";
+    advice = bestMatch.advice;
+}
+
+/* DISPLAY */
+document.getElementById("disease").innerText = diseaseName;
+document.getElementById("confidence").innerText = confidence;
+document.getElementById("advice").innerText = advice;
+
+/* 🔥 CONNECT TO HOSPITAL PAGE (IMPORTANT) */
+document.getElementById("hospitalBtn").href =
+    "nearbyhospital.html?address=" 
+    + encodeURIComponent(address) 
+    + "&disease=" 
+    + encodeURIComponent(diseaseName);
+
+</script>
+
+</body>
+</html>
